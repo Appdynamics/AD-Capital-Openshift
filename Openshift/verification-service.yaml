@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: verification
+  name: verification
+spec:
+  ports:
+  - name: "8083"
+    port: 8080
+    targetPort: 8083
+  selector:
+    app: verification
+    environment: dev
+status:
+  loadBalancer: {}

@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  APPD_AGENT_SHA256: 46def17225878f514175a2e164f14e45f6e99965c0acb45db414b67d924d3f20
+  APPD_AGENT_VERSION: 4.3.7.1
+  APPD_DIR: /appdynamics
+  APPD_ES_HOST: analytics.api.appdynamics.com
+  APPD_ES_PORT: "443"
+  APPD_ES_SSL: "True"
+  APPD_EVENT_ACCOUNT_NAME: customer1_f16aea9b-844d-476d-92db-60f3acaa620d
+  APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY: 4dea0c08-003b-4732-b07d-7abec9c098ba
+  APPDYNAMICS_AGENT_ACCOUNT_NAME: customer1
+  APPDYNAMICS_AGENT_APPLICATION_NAME: AD-Capital-Openshift
+  APPDYNAMICS_CONTROLLER_HOST_NAME: dev.demo.appdynamics.com
+  APPDYNAMICS_CONTROLLER_PORT: "8090"
+  APPDYNAMICS_CONTROLLER_SSL_ENABLED: "False"
+  RETRY: 10s
+  TIMEOUT: 300s
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: env-map
+  name: env-map
