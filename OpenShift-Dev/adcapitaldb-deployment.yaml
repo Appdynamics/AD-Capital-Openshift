@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  name: adcapitaldb
   labels:
     app: adcapitaldb
-  name: adcapitaldb
 spec:
   replicas: 1
   strategy: {}
@@ -12,6 +12,8 @@ spec:
       labels:
         app: adcapitaldb
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/compute: "true"
       containers:
       - env:
         - name: MYSQL_ROOT_PASSWORD

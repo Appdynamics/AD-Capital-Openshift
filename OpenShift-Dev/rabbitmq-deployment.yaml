@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  name: rabbitmq
   labels:
     app: rabbitmq
-  name: rabbitmq
 spec:
   replicas: 1
   strategy: {}
@@ -12,6 +12,8 @@ spec:
       labels:
         app: rabbitmq
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/compute: "true"
       containers:
       - env:
         - name: RABBITMQ_DEFAULT_PASS

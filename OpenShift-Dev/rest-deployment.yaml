@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: verification
+  name: rest
   labels:
-    app: verification
+    application: rest
 spec:
   replicas: 1
   strategy:
@@ -11,8 +11,10 @@ spec:
   template:
     metadata:
       labels:
-        app: verification
+        application: rest
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/compute: "true"
       containers:
       - env:
         - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
@@ -91,18 +93,18 @@ spec:
               key: TIMEOUT
               name: env-map
         - name: ROLE
-          value: verification
+          value: rest
         - name: APPDYNAMICS_AGENT_NODE_NAME
-          value: Verification
+          value: Rest
         - name: APPDYNAMICS_AGENT_TIER_NAME
-          value: Verification-Service
+          value: Authentication-Service
         image: appddemo/adcapital-tomcat
         imagePullPolicy: Always
-        name: verification
+        name: rest
         securityContext:
           privileged: true
         ports:
-        - containerPort: 8083
+        - containerPort: 8080
         resources: {}
         volumeMounts:
         - mountPath: /project

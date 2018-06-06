@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: load
   name: load
+  labels:
+    application: load
 spec:
   clusterIP: None
   ports:
@@ -11,7 +11,102 @@ spec:
     port: 55555
     targetPort: 0
   selector:
-    app: load
-    environment: dev
+    application: load
 status:
   loadBalancer: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: load
+  labels:
+    application: load
+spec:
+  nodeSelector:
+        kubernetes.io/hostname: ip-172-31-26-212.us-west-2.compute.internal
+  containers:
+  - env:
+    - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
+          name: env-map
+    - name: APPDYNAMICS_AGENT_ACCOUNT_NAME
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_AGENT_ACCOUNT_NAME
+          name: env-map
+    - name: APPDYNAMICS_AGENT_APPLICATION_NAME
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_AGENT_APPLICATION_NAME
+          name: env-map
+    - name: APPDYNAMICS_CONTROLLER_HOST_NAME
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_CONTROLLER_HOST_NAME
+          name: env-map
+    - name: APPDYNAMICS_CONTROLLER_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_CONTROLLER_PORT
+          name: env-map
+    - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
+      valueFrom:
+        configMapKeyRef:
+          key: APPDYNAMICS_CONTROLLER_SSL_ENABLED
+          name: env-map
+    - name: APPD_AGENT_SHA256
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_AGENT_SHA256
+          name: env-map
+    - name: APPD_AGENT_VERSION
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_AGENT_VERSION
+          name: env-map
+    - name: APPD_DIR
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_DIR
+          name: env-map
+    - name: APPD_ES_HOST
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_ES_HOST
+          name: env-map
+    - name: APPD_ES_PORT
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_ES_PORT
+          name: env-map
+    - name: APPD_ES_SSL
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_ES_SSL
+          name: env-map
+    - name: APPD_EVENT_ACCOUNT_NAME
+      valueFrom:
+        configMapKeyRef:
+          key: APPD_EVENT_ACCOUNT_NAME
+          name: env-map
+    - name: RETRY
+      valueFrom:
+        configMapKeyRef:
+          key: RETRY
+          name: env-map
+    - name: TIMEOUT
+      valueFrom:
+        configMapKeyRef:
+          key: TIMEOUT
+          name: env-map
+    image: appddemo/adcapital-load
+    name: adcapitalload
+    securityContext:
+      privileged: true
+    resources: {}
+  restartPolicy: Always
+status: {}

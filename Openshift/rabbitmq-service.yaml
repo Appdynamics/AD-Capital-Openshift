@@ -1,15 +1,43 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: rabbitmq
   name: rabbitmq
+  labels:
+    application: rabbitmq
 spec:
   ports:
   - name: "5672"
     port: 5672
     targetPort: 5672
   selector:
-    app: rabbitmq
+    application: rabbitmq
 status:
   loadBalancer: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rabbitmq
+  labels:
+    application: rabbitmq
+  generateName: rabbitmq-master-
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ip-172-31-26-212.us-west-2.compute.internal
+  containers:
+  - env:
+    - name: RABBITMQ_DEFAULT_PASS
+      value: guest
+    - name: RABBITMQ_DEFAULT_USER
+      value: guest
+    image: rabbitmq:3.5.4-management
+    name: rabbitmq
+    securityContext:
+      privileged: true
+    ports:
+    - containerPort: 5672
+    resources: {}
+  restartPolicy: Always
+status: {}

@@ -5,6 +5,8 @@ metadata:
     app: load
   name: load
 spec:
+  nodeSelector:
+        node-role.kubernetes.io/compute: "true"
   containers:
   - env:
     - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY

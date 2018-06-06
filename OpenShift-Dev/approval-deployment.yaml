@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: portal
+  name: approval
   labels:
-    app: portal
+    app: approval
 spec:
   replicas: 1
   strategy:
@@ -11,8 +11,10 @@ spec:
   template:
     metadata:
       labels:
-        app: portal
+        app: approval
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/compute: "true"
       containers:
       - env:
         - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
@@ -91,18 +93,19 @@ spec:
               key: TIMEOUT
               name: env-map
         - name: ROLE
-          value: portal
+          value: approval
         - name: APPDYNAMICS_AGENT_NODE_NAME
-          value: Portal
+          value: Approval
         - name: APPDYNAMICS_AGENT_TIER_NAME
-          value: Portal-Service
+          value: Approval-Services
         image: appddemo/adcapital-tomcat
         imagePullPolicy: Always
-        name: portal
+        name: approval
         securityContext:
           privileged: true
         ports:
         - containerPort: 8080
+          name: http-approval
         resources: {}
         volumeMounts:
         - mountPath: /project
