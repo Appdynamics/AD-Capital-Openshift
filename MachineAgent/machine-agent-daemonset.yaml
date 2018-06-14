@@ -1,0 +1,120 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: machine-agent-daemonset
+  namespace: machine-agent-adcapital
+spec:
+  selector:
+    matchLabels:
+      name: appdynamics-machine-agent
+  template:
+    metadata:
+      labels:
+        name: appdynamics-machine-agent
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: ip-172-31-26-212.us-west-2.compute.internal
+      containers:
+      - env:
+        - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: accesskey
+              name: mysecret
+        - name: APPDYNAMICS_AGENT_ACCOUNT_NAME
+          valueFrom:
+            secretKeyRef:
+              key: accountname
+              name: mysecret
+        - name: APPDYNAMICS_AGENT_APPLICATION_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: APPDYNAMICS_AGENT_APPLICATION_NAME
+              name: env-map
+        - name: APPDYNAMICS_CONTROLLER_HOST_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: APPDYNAMICS_CONTROLLER_HOST_NAME
+              name: env-map
+        - name: APPDYNAMICS_CONTROLLER_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: APPDYNAMICS_CONTROLLER_PORT
+              name: env-map
+        - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: APPDYNAMICS_CONTROLLER_SSL_ENABLED
+              name: env-map
+        - name: APPD_AGENT_SHA256
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_AGENT_SHA256
+              name: env-map
+        - name: APPD_AGENT_VERSION
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_AGENT_VERSION
+              name: env-map
+        - name: APPD_DIR
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_DIR
+              name: env-map
+        - name: APPD_ES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_ES_HOST
+              name: env-map
+        - name: APPD_ES_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_ES_PORT
+              name: env-map
+        - name: APPD_ES_SSL
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_ES_SSL
+              name: env-map
+        - name: APPD_EVENT_ACCOUNT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: APPD_EVENT_ACCOUNT_NAME
+              name: env-map
+        - name: RETRY
+          valueFrom:
+            configMapKeyRef:
+              key: RETRY
+              name: env-map
+        - name: TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              key: TIMEOUT
+              name: env-map
+        - name: APPD_ANALYTICS_MONITOR
+          value: "true"
+        - name: APPD_DOCKER_VISIBILITY
+          value: "true"
+        - name: MACHINE_AGENT_PROPERTIES
+          value: "-Dappdynamics.sim.enabled=true -Dappdynamics.docker.enabled=true"
+        image: appddemo/appdynamics-monitor
+        name: machine-agent-adcapital
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /hostroot
+          name: hostroot
+          readOnly: true
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
+      restartPolicy: Always
+      imagePullPolicy: Always
+      serviceAccount: ma
+      serviceAccountName: ma
+      volumes:
+      - name: hostroot
+        hostPath:
+          path: /
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
